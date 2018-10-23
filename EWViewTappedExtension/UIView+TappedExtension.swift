@@ -2,28 +2,31 @@
 //  UIView+TappedExtension.swift
 //  EWViewTappedExtension
 //
-//  Created by Ethan.Wang on 2018/10/22.
+//  EWeated by Ethan.Wang on 2018/10/22.
 //  Copyright © 2018年 Ethan. All rights reserved.
 //
 
 //import Foundation
 import UIKit
+
+typealias EWTapGestureHanler = ()->Void
+
 ///添加点击事件协议
 protocol UIViewTapable {
     ///单击事件
-    var tapHandlers: [CRTapGestureHanler] { get }
+    var tapHandlers: [EWTapGestureHanler] { get }
     ///双击事件
-    var doubleTapGestureHandlers: [CRTapGestureHanler]{ get }
+    var doubleTapGestureHandlers: [EWTapGestureHanler]{ get }
     ///长点事件
-    var longTapGestureHandlers: [CRTapGestureHanler]{ get }
+    var longTapGestureHandlers: [EWTapGestureHanler]{ get }
     ///上滑事件
-    var upSwipeGestureHandlers: [CRTapGestureHanler]{ get }
+    var upSwipeGestureHandlers: [EWTapGestureHanler]{ get }
     ///左滑事件
-    var leftSwipeGestureHandlers: [CRTapGestureHanler]{ get }
+    var leftSwipeGestureHandlers: [EWTapGestureHanler]{ get }
     ///右滑事件
-    var rightSwipeGestureHandlers: [CRTapGestureHanler]{ get }
+    var rightSwipeGestureHandlers: [EWTapGestureHanler]{ get }
     ///下滑事件
-    var downSwipeGestureHandlers: [CRTapGestureHanler]{ get }
+    var downSwipeGestureHandlers: [EWTapGestureHanler]{ get }
 
     func whenTapped(handler:@escaping()->Void)
     func whenDoubleTapped(handler:@escaping()->Void)
@@ -35,197 +38,199 @@ protocol UIViewTapable {
 
 }
 ///runtime绑定方法时的key
-class CRGestureAssociatedObjectKey {
-    static let CRTapGestureAssociatedObjectString  = "CRTapGestureAssociatedObjectString"
-    static var CRTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
+class EWGestureAssociatedObjectKey {
+    ///设置不同手势不同String标识
+    static let EWTapGestureAssociatedObjectString  = "EWTapGestureAssociatedObjectString"
+    ///获取String标识的内存地址作为runtime属性的Key
+    static var EWTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRDoubleTapGestureAssociatedObjectString  = "CRDoubleTapGestureAssociatedObjectString"
-    static var CRDoubleTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRDoubleTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWDoubleTapGestureAssociatedObjectString  = "EWDoubleTapGestureAssociatedObjectString"
+    static var EWDoubleTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWDoubleTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRLongTapGestureAssociatedObjectString  = "CRLongTapGestureAssociatedObjectString"
-    static var CRLongTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRLongTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWLongTapGestureAssociatedObjectString  = "EWLongTapGestureAssociatedObjectString"
+    static var EWLongTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWLongTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRUpSwipeGestureAssociatedObjectString  = "CRUpSwipeGestureAssociatedObjectString"
-    static var CRUpSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRUpSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWUpSwipeGestureAssociatedObjectString  = "EWUpSwipeGestureAssociatedObjectString"
+    static var EWUpSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWUpSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRLeftSwipeGestureAssociatedObjectString  = "CRLeftSwipeGestureAssociatedObjectString"
-    static var CRLeftSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRLeftSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWLeftSwipeGestureAssociatedObjectString  = "EWLeftSwipeGestureAssociatedObjectString"
+    static var EWLeftSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWLeftSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRRightSwipeGestureAssociatedObjectString  = "CRRightSwipeGestureAssociatedObjectString"
-    static var CRRightSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRRightSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWRightSwipeGestureAssociatedObjectString  = "EWRightSwipeGestureAssociatedObjectString"
+    static var EWRightSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWRightSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let CRDownSwipeGestureAssociatedObjectString  = "CRRightSwipeGestureAssociatedObjectString"
-    static var CRDownSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(CRGestureAssociatedObjectKey.CRDownSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
+    static let EWDownSwipeGestureAssociatedObjectString  = "EWDownSwipeGestureAssociatedObjectString"
+    static var EWDownSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWDownSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
 }
 
-typealias CRTapGestureHanler = ()->Void
-
 extension UIView: UIViewTapable {
-    var tapHandlers: [CRTapGestureHanler]{
-        return crTapGesture.tappedHandler
+    var tapHandlers: [EWTapGestureHanler]{
+        return EWOneTapGesture.tappedHandler
     }
-    var doubleTapGestureHandlers: [CRTapGestureHanler]{
-        return crDoubleTapGesture.tappedHandler
+    var doubleTapGestureHandlers: [EWTapGestureHanler]{
+        return EWDoubleTapGesture.tappedHandler
     }
-    var longTapGestureHandlers: [CRTapGestureHanler]{
-        return crLongTapGesture.tappedHandler
+    var longTapGestureHandlers: [EWTapGestureHanler]{
+        return EWLongTapGesture.tappedHandler
     }
-    var upSwipeGestureHandlers: [CRTapGestureHanler] {
-        return crUpSwipeGesture.tappedHandler
+    var upSwipeGestureHandlers: [EWTapGestureHanler] {
+        return EWUpSwipeGesture.tappedHandler
     }
-    var leftSwipeGestureHandlers: [CRTapGestureHanler] {
-        return crLeftSwipeGesture.tappedHandler
+    var leftSwipeGestureHandlers: [EWTapGestureHanler] {
+        return EWLeftSwipeGesture.tappedHandler
     }
-    var rightSwipeGestureHandlers: [CRTapGestureHanler] {
-        return crRightSwipeGesture.tappedHandler
+    var rightSwipeGestureHandlers: [EWTapGestureHanler] {
+        return EWRightSwipeGesture.tappedHandler
     }
-    var downSwipeGestureHandlers: [CRTapGestureHanler] {
-        return crDownSwipeGesture.tappedHandler
+    var downSwipeGestureHandlers: [EWTapGestureHanler] {
+        return EWDownSwipeGesture.tappedHandler
     }
     ///runtime的方式为View设置手势属性
-    var crTapGesture: CRTapGesture {
+    var EWOneTapGesture: EWTapGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRTapGestureKey) as? CRTapGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWTapGestureKey) as? EWTapGesture {
                 return obj
             }
-            let tapGesture = CRTapGesture(view: self)
-            tapGesture.gesture.require(toFail: crDoubleTapGesture.gesture)
+            let tapGesture = EWTapGesture(view: self)
+            tapGesture.gesture.require(toFail: EWDoubleTapGesture.gesture)
             return tapGesture
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crDoubleTapGesture: CRTapGesture {
+    var EWDoubleTapGesture: EWTapGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRDoubleTapGestureKey) as? CRTapGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWDoubleTapGestureKey) as? EWTapGesture {
                 return obj
             }
-            return CRTapGesture(view: self,taps: 2)
+            return EWTapGesture(view: self,taps: 2)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRDoubleTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWDoubleTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crLongTapGesture:CRLongPressGesture {
+    var EWLongTapGesture:EWLongPressGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRLongTapGestureKey) as? CRLongPressGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWLongTapGestureKey) as? EWLongPressGesture {
                 return obj
             }
-            return CRLongPressGesture(view: self)
+            return EWLongPressGesture(view: self)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRLongTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWLongTapGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crUpSwipeGesture: CRSwipeGesture {
+    var EWUpSwipeGesture: EWSwipeGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRUpSwipeGestureKey) as? CRSwipeGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWUpSwipeGestureKey) as? EWSwipeGesture {
                 return obj
             }
-            return CRSwipeGesture(view: self)
+            return EWSwipeGesture(view: self)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRUpSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWUpSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crLeftSwipeGesture: CRSwipeGesture {
+    var EWLeftSwipeGesture: EWSwipeGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRLeftSwipeGestureKey) as? CRSwipeGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWLeftSwipeGestureKey) as? EWSwipeGesture {
                 return obj
             }
-            return CRSwipeGesture(view: self, direction: .left)
+            return EWSwipeGesture(view: self, direction: .left)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRLeftSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWLeftSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crRightSwipeGesture: CRSwipeGesture {
+    var EWRightSwipeGesture: EWSwipeGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRRightSwipeGestureKey) as? CRSwipeGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWRightSwipeGestureKey) as? EWSwipeGesture {
                 return obj
             }
-            return CRSwipeGesture(view: self, direction: .right)
+            return EWSwipeGesture(view: self, direction: .right)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRRightSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWRightSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    var crDownSwipeGesture: CRSwipeGesture {
+    var EWDownSwipeGesture: EWSwipeGesture {
         get {
-            if let obj = objc_getAssociatedObject(self, CRGestureAssociatedObjectKey.CRDownSwipeGestureKey) as? CRSwipeGesture {
+            if let obj = objc_getAssociatedObject(self, EWGestureAssociatedObjectKey.EWDownSwipeGestureKey) as? EWSwipeGesture {
                 return obj
             }
-            return CRSwipeGesture(view: self, direction: .down)
+            return EWSwipeGesture(view: self, direction: .down)
         }
         set {
-            objc_setAssociatedObject(self, CRGestureAssociatedObjectKey.CRDownSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, EWGestureAssociatedObjectKey.EWDownSwipeGestureKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     func whenTapped(handler: @escaping () -> Void){
         self.isUserInteractionEnabled = true
-        self.crTapGesture.registerHandler(handler)
+        self.EWOneTapGesture.registerHandler(handler)
     }
 
     func whenDoubleTapped(handler:@escaping ()->Void){
         self.isUserInteractionEnabled = true
-        self.crDoubleTapGesture.registerHandler(handler)
+        self.EWDoubleTapGesture.registerHandler(handler)
     }
 
     func whenLongPressed(handler:@escaping ()->Void){
         self.isUserInteractionEnabled = true
-        self.crLongTapGesture.registerHandler(handler)
+        self.EWLongTapGesture.registerHandler(handler)
     }
 
     func whenUpSwiped(handler: @escaping () -> Void) {
         self.isUserInteractionEnabled = true
-        self.crUpSwipeGesture.registerHandler(handler)
+        self.EWUpSwipeGesture.registerHandler(handler)
     }
 
     func whenLeftSwiped(handler: @escaping () -> Void) {
         self.isUserInteractionEnabled = true
-        self.crLeftSwipeGesture.registerHandler(handler)
+        self.EWLeftSwipeGesture.registerHandler(handler)
     }
 
     func whenRightSwiped(handler: @escaping () -> Void) {
         self.isUserInteractionEnabled = true
-        self.crRightSwipeGesture.registerHandler(handler)
+        self.EWRightSwipeGesture.registerHandler(handler)
     }
 
     func whenDownSwiped(handler: @escaping () -> Void) {
         self.isUserInteractionEnabled = true
-        self.crDownSwipeGesture.registerHandler(handler)
+        self.EWDownSwipeGesture.registerHandler(handler)
     }
 
 }
 ///单击双击手势
-class CRTapGesture: NSObject, UIGestureRecognizerDelegate{
+class EWTapGesture: NSObject, UIGestureRecognizerDelegate{
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UITapGestureRecognizer
-    var tappedHandler = [CRTapGestureHanler]()
+    ///手势储存外界闭包
+    fileprivate var tappedHandler = [EWTapGestureHanler]()
 
-    init(view:UIView,taps:Int = 1) {
+    init(view: UIView,taps: Int = 1) {
         myView = view
         ///手势
         gesture = UITapGestureRecognizer()
         super.init()
         gesture.delegate = self
         gesture.numberOfTapsRequired = taps
-        gesture.addTarget(self, action: #selector(CRTapGesture.tapped(_:)))
+        gesture.addTarget(self, action: #selector(EWTapGesture.tapped(_:)))
         myView.addGestureRecognizer(gesture)
         if taps == 1 {
-            myView.crTapGesture = self
+            myView.EWOneTapGesture = self
         }else if taps == 2{
-            myView.crDoubleTapGesture = self
+            myView.EWDoubleTapGesture = self
         }
 
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func registerHandler(_ handler:@escaping CRTapGestureHanler){
+    ///将外界传入的block传入手势方法
+    fileprivate func registerHandler(_ handler:@escaping EWTapGestureHanler){
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
@@ -233,30 +238,24 @@ class CRTapGesture: NSObject, UIGestureRecognizerDelegate{
             handler()
         }
     }
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view == myView{
-            return true
-        }
-        return false
-    }
 }
 ///长按手势
-class CRLongPressGesture {
-
-    typealias CRLongPressGestureHandler = ()->Void
+class EWLongPressGesture {
+    typealias EWLongPressGestureHandler = ()->Void
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UILongPressGestureRecognizer
-    var tappedHandler = [CRLongPressGestureHandler]()
+    fileprivate var tappedHandler = [EWLongPressGestureHandler]()
 
     init(view:UIView,taps:Int = 1) {
         myView = view
         gesture = UILongPressGestureRecognizer()
         gesture.minimumPressDuration = TimeInterval(taps)
-        gesture.addTarget(self, action: #selector(CRTapGesture.tapped(_:)))
+        gesture.addTarget(self, action: #selector(EWTapGesture.tapped(_:)))
         myView.addGestureRecognizer(gesture)
-        myView.crLongTapGesture = self
+        myView.EWLongTapGesture = self
     }
-    func registerHandler(_ handler:@escaping CRLongPressGestureHandler){
+    ///将外界传入的block传入手势方法
+    fileprivate func registerHandler(_ handler:@escaping EWLongPressGestureHandler){
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
@@ -267,32 +266,32 @@ class CRLongPressGesture {
     }
 }
 ///滑动手势
-class CRSwipeGesture {
-    typealias CRSwipeGestureHandler = ()->Void
+class EWSwipeGesture {
+    typealias EWSwipeGestureHandler = ()->Void
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UISwipeGestureRecognizer
-    var tappedHandler = [CRSwipeGestureHandler]()
+    fileprivate var tappedHandler = [EWSwipeGestureHandler]()
 
     init(view:UIView,direction: UISwipeGestureRecognizer.Direction = .up) {
         myView = view
         gesture = UISwipeGestureRecognizer()
         gesture.direction = direction
-        gesture.addTarget(self, action: #selector(CRTapGesture.tapped(_:)))
+        gesture.addTarget(self, action: #selector(EWTapGesture.tapped(_:)))
         myView.addGestureRecognizer(gesture)
         switch direction {
         case .up:
-            myView.crUpSwipeGesture = self
+            myView.EWUpSwipeGesture = self
         case .left:
-            myView.crLeftSwipeGesture = self
+            myView.EWLeftSwipeGesture = self
         case .right:
-            myView.crRightSwipeGesture = self
+            myView.EWRightSwipeGesture = self
         case .down:
-            myView.crDownSwipeGesture = self
+            myView.EWDownSwipeGesture = self
         default:
             return
         }
     }
-    func registerHandler(_ handler:@escaping CRSwipeGestureHandler){
+    fileprivate func registerHandler(_ handler:@escaping EWSwipeGestureHandler){
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
