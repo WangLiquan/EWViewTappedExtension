@@ -204,7 +204,7 @@ extension UIView: UIViewTapable {
 
 }
 ///单击双击手势
-class EWTapGesture: NSObject, UIGestureRecognizerDelegate{
+class EWTapGesture {
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UITapGestureRecognizer
     ///手势储存外界闭包
@@ -214,8 +214,6 @@ class EWTapGesture: NSObject, UIGestureRecognizerDelegate{
         myView = view
         ///手势
         gesture = UITapGestureRecognizer()
-        super.init()
-        gesture.delegate = self
         gesture.numberOfTapsRequired = taps
         gesture.addTarget(self, action: #selector(EWTapGesture.tapped(_:)))
         myView.addGestureRecognizer(gesture)
