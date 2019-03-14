@@ -9,32 +9,32 @@
 //import Foundation
 import UIKit
 
-typealias EWTapGestureHanler = ()->Void
+typealias EWTapGestureHanler = () -> Void
 
 ///添加点击事件协议
 protocol UIViewTapable {
     ///单击事件
     var tapHandlers: [EWTapGestureHanler] { get }
     ///双击事件
-    var doubleTapGestureHandlers: [EWTapGestureHanler]{ get }
+    var doubleTapGestureHandlers: [EWTapGestureHanler] { get }
     ///长点事件
-    var longTapGestureHandlers: [EWTapGestureHanler]{ get }
+    var longTapGestureHandlers: [EWTapGestureHanler] { get }
     ///上滑事件
-    var upSwipeGestureHandlers: [EWTapGestureHanler]{ get }
+    var upSwipeGestureHandlers: [EWTapGestureHanler] { get }
     ///左滑事件
-    var leftSwipeGestureHandlers: [EWTapGestureHanler]{ get }
+    var leftSwipeGestureHandlers: [EWTapGestureHanler] { get }
     ///右滑事件
-    var rightSwipeGestureHandlers: [EWTapGestureHanler]{ get }
+    var rightSwipeGestureHandlers: [EWTapGestureHanler] { get }
     ///下滑事件
-    var downSwipeGestureHandlers: [EWTapGestureHanler]{ get }
+    var downSwipeGestureHandlers: [EWTapGestureHanler] { get }
 
-    func whenTapped(handler:@escaping()->Void)
-    func whenDoubleTapped(handler:@escaping()->Void)
-    func whenLongPressed(handler:@escaping()->Void)
-    func whenUpSwiped(handler:@escaping()->Void)
-    func whenLeftSwiped(handler:@escaping()->Void)
-    func whenRightSwiped(handler:@escaping()->Void)
-    func whenDownSwiped(handler:@escaping()->Void)
+    func whenTapped(handler:@escaping() -> Void)
+    func whenDoubleTapped(handler:@escaping() -> Void)
+    func whenLongPressed(handler:@escaping() -> Void)
+    func whenUpSwiped(handler:@escaping() -> Void)
+    func whenLeftSwiped(handler:@escaping() -> Void)
+    func whenRightSwiped(handler:@escaping() -> Void)
+    func whenDownSwiped(handler:@escaping() -> Void)
 
 }
 ///runtime绑定方法时的key
@@ -65,13 +65,13 @@ class EWGestureAssociatedObjectKey {
 }
 
 extension UIView: UIViewTapable {
-    var tapHandlers: [EWTapGestureHanler]{
+    var tapHandlers: [EWTapGestureHanler] {
         return EWOneTapGesture.tappedHandler
     }
-    var doubleTapGestureHandlers: [EWTapGestureHanler]{
+    var doubleTapGestureHandlers: [EWTapGestureHanler] {
         return EWDoubleTapGesture.tappedHandler
     }
-    var longTapGestureHandlers: [EWTapGestureHanler]{
+    var longTapGestureHandlers: [EWTapGestureHanler] {
         return EWLongTapGesture.tappedHandler
     }
     var upSwipeGestureHandlers: [EWTapGestureHanler] {
@@ -167,17 +167,17 @@ extension UIView: UIViewTapable {
         }
     }
 
-    func whenTapped(handler: @escaping () -> Void){
+    func whenTapped(handler: @escaping () -> Void) {
         self.isUserInteractionEnabled = true
         self.EWOneTapGesture.registerHandler(handler)
     }
 
-    func whenDoubleTapped(handler:@escaping ()->Void){
+    func whenDoubleTapped(handler:@escaping () -> Void) {
         self.isUserInteractionEnabled = true
         self.EWDoubleTapGesture.registerHandler(handler)
     }
 
-    func whenLongPressed(handler:@escaping ()->Void){
+    func whenLongPressed(handler:@escaping () -> Void) {
         self.isUserInteractionEnabled = true
         self.EWLongTapGesture.registerHandler(handler)
     }
@@ -219,7 +219,7 @@ class EWTapGesture {
         myView.addGestureRecognizer(gesture)
         if taps == 1 {
             myView.EWOneTapGesture = self
-        }else if taps == 2{
+        } else if taps == 2 {
             myView.EWDoubleTapGesture = self
         }
 
@@ -228,18 +228,18 @@ class EWTapGesture {
         fatalError("init(coder:) has not been implemented")
     }
     ///将外界传入的block传入手势方法
-    fileprivate func registerHandler(_ handler:@escaping EWTapGestureHanler){
+    fileprivate func registerHandler(_ handler:@escaping EWTapGestureHanler) {
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
-        for handler in self.tappedHandler{
+        for handler in self.tappedHandler {
             handler()
         }
     }
 }
 ///长按手势
 class EWLongPressGesture {
-    typealias EWLongPressGestureHandler = ()->Void
+    typealias EWLongPressGestureHandler = () -> Void
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UILongPressGestureRecognizer
     fileprivate var tappedHandler = [EWLongPressGestureHandler]()
@@ -253,11 +253,11 @@ class EWLongPressGesture {
         myView.EWLongTapGesture = self
     }
     ///将外界传入的block传入手势方法
-    fileprivate func registerHandler(_ handler:@escaping EWLongPressGestureHandler){
+    fileprivate func registerHandler(_ handler:@escaping EWLongPressGestureHandler) {
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
-        for handler in self.tappedHandler{
+        for handler in self.tappedHandler {
             guard gesture.state == .began else { return }
             handler()
         }
@@ -265,7 +265,7 @@ class EWLongPressGesture {
 }
 ///滑动手势
 class EWSwipeGesture {
-    typealias EWSwipeGestureHandler = ()->Void
+    typealias EWSwipeGestureHandler = () -> Void
     fileprivate weak var myView:UIView!
     fileprivate let gesture : UISwipeGestureRecognizer
     fileprivate var tappedHandler = [EWSwipeGestureHandler]()
@@ -289,11 +289,11 @@ class EWSwipeGesture {
             return
         }
     }
-    fileprivate func registerHandler(_ handler:@escaping EWSwipeGestureHandler){
+    fileprivate func registerHandler(_ handler:@escaping EWSwipeGestureHandler) {
         self.tappedHandler.append(handler)
     }
     @objc func tapped(_ sender: UITapGestureRecognizer) {
-        for handler in self.tappedHandler{
+        for handler in self.tappedHandler {
             handler()
         }
     }

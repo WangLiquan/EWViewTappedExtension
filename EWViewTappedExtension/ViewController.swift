@@ -10,7 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
 
-
     let tapView: UIView = {
         let view = UIView(frame: CGRect(x: (UIScreen.main.bounds.width - 100)/2, y: 200, width: 100, height: 100))
         view.backgroundColor = UIColor.brown
@@ -43,6 +42,4 @@ class ViewController: UIViewController {
         }
     }
 
-
 }
-
