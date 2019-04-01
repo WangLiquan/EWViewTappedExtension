@@ -1,5 +1,7 @@
 # EWViewTappedExtension
-<h3>使用拓展与runtime,为UIView添加手势事件</h3>
+[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
+
+使用拓展与runtime,为UIView添加手势事件
 
 # 使用方法:
 将UIView+TappedExtension.swift文件拖入项目,调用时:
