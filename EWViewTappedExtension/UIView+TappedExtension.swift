@@ -40,26 +40,27 @@ protocol UIViewTapable {
 ///runtime绑定方法时的key
 class EWGestureAssociatedObjectKey {
     ///设置不同手势不同String标识
-    static let EWTapGestureAssociatedObjectString  = "EWTapGestureAssociatedObjectString"
+    /* 这里有一个问题，使用超过9位的String作为标识，无法获取指针。是swift5才出现大的问题，不确定原因 **/
+    static let EWTapGestureAssociatedObjectString  = "EWTap"
     ///获取String标识的内存地址作为runtime属性的Key
     static var EWTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWDoubleTapGestureAssociatedObjectString  = "EWDoubleTapGestureAssociatedObjectString"
+    static let EWDoubleTapGestureAssociatedObjectString  = "EWDoTap"
     static var EWDoubleTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWDoubleTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWLongTapGestureAssociatedObjectString  = "EWLongTapGestureAssociatedObjectString"
+    static let EWLongTapGestureAssociatedObjectString  = "EWLoTap"
     static var EWLongTapGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWLongTapGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWUpSwipeGestureAssociatedObjectString  = "EWUpSwipeGestureAssociatedObjectString"
+    static let EWUpSwipeGestureAssociatedObjectString  = "EWUpSwi"
     static var EWUpSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWUpSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWLeftSwipeGestureAssociatedObjectString  = "EWLeftSwipeGestureAssociatedObjectString"
+    static let EWLeftSwipeGestureAssociatedObjectString  = "EWLeSwi"
     static var EWLeftSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWLeftSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWRightSwipeGestureAssociatedObjectString  = "EWRightSwipeGestureAssociatedObjectString"
+    static let EWRightSwipeGestureAssociatedObjectString  = "EWRiSwi"
     static var EWRightSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWRightSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
-    static let EWDownSwipeGestureAssociatedObjectString  = "EWDownSwipeGestureAssociatedObjectString"
+    static let EWDownSwipeGestureAssociatedObjectString  = "EWDoSwi"
     static var EWDownSwipeGestureKey = {return Unmanaged<AnyObject>.passUnretained(EWGestureAssociatedObjectKey.EWDownSwipeGestureAssociatedObjectString as AnyObject).toOpaque()}()
 
 }
